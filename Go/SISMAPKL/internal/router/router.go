@@ -9,6 +9,9 @@ import (
 // Setup pendukung untuk route
 func SetupRouter(f *fiber.App, m app.Middlewares, h app.Handlers) {
 
-	// Route penghubung endpoint
+	// Connection status
 	f.Get("/status-check", h.HandleStatus.HandleStatus)
+
+	// Auth area
+	f.Post("/login-mahasiswa", h.HandleLogin.HandleLoginMahasiswa)
 }

@@ -7,12 +7,18 @@ import (
 )
 
 type Contract interface {
+	// StartTransaction memulai transaksi database baru.
+	// Jika logic di dalam StartTransaction menghasilkan error, maka seluruh perubahan akan dibatalkan (rollback).
+	// Sedangkan jika tidak ada error, maka seluruh perubahan akan diterapkan (commit).
 	StartTransaction(fn func(tx *gorm.DB) error, opts ...*sql.TxOptions) error
 
+	// Begin memulai transaksi database baru.
 	Begin(opts ...*sql.TxOptions) *gorm.DB
 
+	// Commit menerapkan semua perubahan di dalam transaksi database.
 	Commit() *gorm.DB
 
+	// Rollback membatalkan semua perubahan di dalam transaksi database.
 	Rollback() *gorm.DB
 }
 
@@ -28,17 +34,14 @@ func (r *repository) StartTransaction(fn func(*gorm.DB) error, opts ...*sql.TxOp
 	return r.DB.Transaction(fn, opts...)
 }
 
-// Begin implements Contract.
 func (r *repository) Begin(opts ...*sql.TxOptions) *gorm.DB {
-	panic("unimplemented")
+	return r.DB.Begin(opts...)
 }
 
-// Commit implements Contract.
 func (r *repository) Commit() *gorm.DB {
-	panic("unimplemented")
+	return r.DB.Commit()
 }
 
-// Rollback implements Contract.
 func (r *repository) Rollback() *gorm.DB {
-	panic("unimplemented")
+	return r.DB.Rollback()
 }
